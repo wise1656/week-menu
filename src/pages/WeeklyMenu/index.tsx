@@ -1,24 +1,39 @@
-import { useParams } from 'react-router-dom';
-import { Typography, List, ListItem, ListItemText } from '@mui/material';
-import { useMenuStore } from '../../features/menu/store';
+/** @jsxImportSource @emotion/react */
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { Typography, List, ListItem, styled } from "@mui/material";
+import { useMenuStore } from "../../features/menu/store";
+import { EditableText } from "../../shared/ui/Editable";
+import EditButton from "../../shared/ui/EditButton";
+import { Header } from "../../shared/ui/Header";
 
 export const WeeklyMenu = () => {
   const { id } = useParams();
-  const { getMenuById } = useMenuStore();
+  const { getMenuById, updateMenuName } = useMenuStore();
   const menu = getMenuById(id!);
+  const [isEdit, setEdit] = useState(false);
 
-  if (!menu) return <Typography>Menu not found</Typography>;
+  if (!menu || !id) return <Typography>Меню не найдено</Typography>;
 
   return (
     <div>
-      <Typography variant="h4">{menu.name}</Typography>
+      <Header>
+        <EditableText
+          variant="h4"
+          isEdit={isEdit}
+          value={menu.name}
+          setValue={(val) => updateMenuName(id, val)}
+        />
+        <EditButton onClick={() => setEdit((e) => !e)} />
+      </Header>
       {menu.days.map((day) => (
         <div key={day.day}>
           <Typography variant="h6">{day.day}</Typography>
           <List>
             {day.meals.map((meal) => (
               <ListItem key={meal.type}>
-                <ListItemText primary={meal.type} secondary={meal.dish} />
+                <MealType>{meal.type}</MealType>:{" "}
+                {meal.dishes.map((d) => d.name).join(", ")}
               </ListItem>
             ))}
           </List>
@@ -27,3 +42,7 @@ export const WeeklyMenu = () => {
     </div>
   );
 };
+
+const MealType = styled("div")`
+  font-weight: bold;
+`;

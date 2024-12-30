@@ -7,9 +7,9 @@ interface LayoutProps {
 export const Layout = ({ children }: LayoutProps) => {
   return (
     <Container>
-      <Typography variant="h3" align="center" gutterBottom>
-        Weekly Menu Planner
-      </Typography>
+      {/* <Typography variant="h4" align="center" gutterBottom> */}
+        {/* Weekly Menu Planner
+      </Typography> */}
       {children}
     </Container>
   );
