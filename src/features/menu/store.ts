@@ -1,39 +1,7 @@
 import { create } from "zustand";
-import { produce } from "immer";
-
-interface Ingredient {
-  name: string;
-  count: number;
-  unit: string; // единица измерения
-}
-
-interface Dish {
-  name: string;
-  ingredients: Ingredient[];
-}
-
-interface Meal {
-  type: string;
-  dishes: Dish[];
-}
-
-interface Day {
-  day: string;
-  meals: Meal[];
-}
-
-interface Menu {
-  id: string;
-  name: string;
-  days: Day[];
-}
-
-interface MenuStore {
-  menus: Menu[];
-  dishes: Dish[];
-  getMenuById: (id: string) => Menu | undefined;
-  updateMenuName: (id: string, newName: string) => void;
-}
+import { MenuStore } from "./types";
+import { getMenuUpdater } from "./MenuUpdater";
+import { getDishUpdater } from "./DishUpdater";
 
 export const useMenuStore = create<MenuStore>((set, get) => ({
   menus: [
@@ -46,28 +14,27 @@ export const useMenuStore = create<MenuStore>((set, get) => ({
           meals: [
             {
               type: "Breakfast",
-              dishes: [{ name: "Oatmeal", ingredients: [] }],
+              dishes: ["1"],
             },
-            { type: "Lunch", dishes: [{ name: "Soup", ingredients: [] }] },
+            {
+              type: "Lunch",
+              dishes: ["2"],
+            },
             {
               type: "Dinner",
-              dishes: [{ name: "Grilled Chicken", ingredients: [] }],
+              dishes: ["3"],
             },
           ],
         },
       ],
     },
   ],
-  dishes: [],
-  getMenuById: (id) => get().menus.find((menu) => menu.id === id),
-  updateMenuName: (id: string, newName: string) => {
-    set(
-      produce((state: MenuStore): void => {
-        const menu = state.menus.find((menu) => menu.id === id);
-        if (menu) {
-          menu.name = newName; // Прямое изменение с помощью immer
-        }
-      })
-    );
-  },
+  dishes: [
+    { id: "1", name: "Oatmeal", ingredients: [] },
+    { id: "2", name: "Soup", ingredients: [] },
+    { id: "3", name: "Grilled Chicken", ingredients: [] },
+    { id: "4", name: "New soup", ingredients: [] },
+  ],
+  ...getMenuUpdater(get, set),
+  ...getDishUpdater(get, set),
 }));

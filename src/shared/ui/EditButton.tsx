@@ -1,13 +1,20 @@
-import React from "react";
-import IconButton from "@mui/material/IconButton";
+import { IconButton, ToggleButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 
-const EditButton = ({ onClick }: { onClick: () => void }) => {
+export const EditButton = ({
+  onClick,
+  selected,
+}: {
+  onClick: () => void;
+  selected: boolean;
+}) => {
   return (
-    <IconButton onClick={onClick} aria-label="Редактировать">
+    <IconButton
+      color={selected ? "primary" : "default"}
+      onClick={onClick}
+      sx={selected ? { border: 1 } : {}}
+    >
       <EditIcon />
     </IconButton>
   );
 };
-
-export default EditButton;
