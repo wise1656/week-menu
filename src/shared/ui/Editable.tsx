@@ -7,6 +7,7 @@ interface EditableTextProps {
   isEdit: boolean;
   onClick?: () => void;
   label?: string;
+  editWidth?: number;
 }
 
 export const EditableText = ({
@@ -14,12 +15,18 @@ export const EditableText = ({
   setValue,
   isEdit,
   label,
+  editWidth,
   ...typographyProps
 }: EditableTextProps & TypographyOwnProps) => {
   return (
-    <div>
+    <>
       {isEdit ? (
-        <TextEdit value={value} onChangeValue={setValue} label={label} />
+        <TextEdit
+          value={value}
+          onChangeValue={setValue}
+          label={label}
+          sx={{ width: editWidth }}
+        />
       ) : (
         <Typography
           variant="body1"
@@ -29,6 +36,6 @@ export const EditableText = ({
           {value}
         </Typography>
       )}
-    </div>
+    </>
   );
 };

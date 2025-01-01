@@ -87,13 +87,14 @@ interface MenuMealProps {
 function MenuMeal({ meal, isEdit, menuId, nDay, nMeal }: MenuMealProps) {
   const { updateMeal } = useMenuStore();
   return (
-    <Stack direction={"row"}>
+    <Stack direction={"row"} alignItems={"flex-end"}>
       <EditableText
         label={"Прием пищи"}
         value={meal.type}
         isEdit={isEdit}
         setValue={(val) => updateMeal(menuId, nDay, nMeal, val)}
         sx={{ fontWeight: "bold" }}
+        editWidth={100}
       />
       :
       <div

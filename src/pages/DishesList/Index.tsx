@@ -9,6 +9,7 @@ import { EditableText } from "../../shared/ui/Editable";
 import { TextEdit } from "../../shared/ui/TextEdit";
 import { useParams } from "react-router-dom";
 import { Header } from "../../shared/ui/Header";
+import { TextEditWithVariants } from "../../shared/ui/TextEditWithVariants";
 
 export const DishesList = () => {
   const { getDishesList } = useMenuStore();
@@ -72,7 +73,7 @@ interface IngredientsProps {
 }
 
 function Ingredients({ dish, isEdit }: IngredientsProps) {
-  const { setIngredient } = useMenuStore();
+  const { setIngredient, getIngredients, getIngredientUnits } = useMenuStore();
   const ingredients = isEdit
     ? [...dish.ingredients, { name: "", count: 0, unit: "" }]
     : dish.ingredients;
@@ -86,19 +87,27 @@ function Ingredients({ dish, isEdit }: IngredientsProps) {
     <>
       {ingredients.map((ingredient, nIngr) =>
         isEdit ? (
-          <Stack direction={"row"} key={nIngr}>
-            <TextEdit
+          <Stack direction={"row"} key={nIngr} alignItems={"flex-end"}>
+            <TextEditWithVariants
+              label="ингредиент"
+              sx={{ flex: 2 }}
               value={ingredient.name}
               onChangeValue={(val) => updateIngredient({ name: val }, nIngr)}
+              options={getIngredients()}
             />
             <TextEdit
+              label="количество"
+              sx={{ flex: 1 }}
               value={ingredient.count}
               type="number"
               onChangeValue={(val) => updateIngredient({ count: +val }, nIngr)}
             />
-            <TextEdit
+            <TextEditWithVariants
+              label="единицы"
+              sx={{ flex: 1 }}
               value={ingredient.unit}
               onChangeValue={(val) => updateIngredient({ unit: val }, nIngr)}
+              options={getIngredientUnits(ingredient.name)}
             />
           </Stack>
         ) : (

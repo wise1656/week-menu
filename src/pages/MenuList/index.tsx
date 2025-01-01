@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { Button, List, ListItem, Typography } from "@mui/material";
+import { Button, List, ListItem, Stack, Typography } from "@mui/material";
 import { useMenuStore } from "../../features/menu/store";
+import ListIcon from "@mui/icons-material/List";
 
 export const MenuList = () => {
   const { menus } = useMenuStore();
@@ -8,7 +9,16 @@ export const MenuList = () => {
 
   return (
     <>
-      <Typography variant="h4">Список Меню</Typography>
+      <Stack
+        direction={"row"}
+        justifyContent={"space-between"}
+        alignItems={"flex-end"}
+      >
+        <Typography variant="h4">Список Меню</Typography>
+        <Link to="/dishes">
+          <ListIcon fontSize="large" />
+        </Link>
+      </Stack>
       <List>
         {menus.map((menu) => (
           <ListItem key={menu.id}>
