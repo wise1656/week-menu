@@ -1,4 +1,4 @@
-import { Autocomplete, TextField, Chip } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 
 interface MultiSelectProps<T> {
   label: string;
@@ -15,7 +15,7 @@ export function MultiSelect<T extends object | string>({
   label,
   toStr,
 }: MultiSelectProps<T>) {
-  const handleChange = (e: any, newValue: T[]) => {
+  const handleChange = (_e: any, newValue: T[]) => {
     onChange(newValue);
   };
 
@@ -23,14 +23,14 @@ export function MultiSelect<T extends object | string>({
 
   return (
     <Autocomplete
-      sx={{ minWidth: 100 }}
+      sx={{ minWidth: 150 }}
       multiple
       options={options}
       getOptionLabel={(o) => toStrVal(o)}
       value={value}
       onChange={handleChange}
       renderTags={
-        (value: T[], getTagProps) => value.map(toStrVal).map((o) => o + ", ")
+        (value: T[], _getTagProps) => value.map(toStrVal).map((o) => o + ", ")
         // .map((option, index) => (
         // <Chip
         //   variant="outlined"

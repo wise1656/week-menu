@@ -1,17 +1,11 @@
 import { produce } from "immer";
-import {
-  Dish,
-  DishUpdater,
-  GetState,
-  Ingredient,
-  MenuStore,
-  SetState,
-} from "./types";
+import { Dish, Ingredient, MenuStore } from "./types";
+import { GetState, SetState } from "../../shared/types";
 
 export const getDishUpdater = (
   get: GetState<MenuStore>,
   set: SetState<MenuStore>
-): DishUpdater => ({
+) => ({
   getDishesList: (filter?: string): Dish[] => {
     if (!filter) return get().dishes;
     return get().dishes.filter((d) =>
@@ -28,7 +22,15 @@ export const getDishUpdater = (
     );
   },
 
-  setIngredients: (dishId: string, ingredients: Ingredient[]) => {
-    
+  setIngredient: (dishId: string, nIngr: number, ingredient: Ingredient) => {
+    set(
+      produce((state: MenuStore) => {
+        const dish = state.dishes.find((d) => d.id == dishId);
+        if (!dish) return;
+        dish.ingredients[nIngr] = ingredient;
+      })
+    );
   },
 });
+
+export type DishUpdater = ReturnType<typeof getDishUpdater>;

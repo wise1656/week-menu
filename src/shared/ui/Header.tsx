@@ -2,14 +2,20 @@
 import { css } from "@emotion/react";
 import BackButton from "./BackButton";
 
-export const Header = ({ children }) => (
+export const Header = ({
+  children,
+  backUrl,
+}: {
+  children: any;
+  backUrl?: string;
+}) => (
   <div
     css={css`
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
     `}
   >
-    <BackButton />
+    <BackButton backUrl={backUrl} />
     {children}
   </div>
 );

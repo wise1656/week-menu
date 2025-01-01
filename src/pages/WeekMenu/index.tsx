@@ -1,26 +1,26 @@
 /** @jsxImportSource @emotion/react */
 import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { Typography, List, ListItem, styled } from "@mui/material";
+import { Link, useParams } from "react-router-dom";
+import { Typography, List, ListItem, Stack, css } from "@mui/material";
 import { useMenuStore } from "../../features/menu/store";
 import { EditableText } from "../../shared/ui/Editable";
 import { EditButton } from "../../shared/ui/EditButton";
 import { Header } from "../../shared/ui/Header";
-import { Day, Meal } from "../../features/menu/types";
+import { Day, Dish, Meal } from "../../features/menu/types";
 import { MultiSelect } from "../../shared/ui/MultiSelect";
+import { TextWithPopover } from "../../shared/ui/TextWithPopover";
 
 export const WeekMenu = () => {
   const { id } = useParams();
   const { getMenuById, updateMenuName } = useMenuStore();
   const menu = getMenuById(id!);
   const [isEdit, setEdit] = useState(false);
-  const [test, setTest] = useState(["123"]);
 
   if (!menu || !id) return <Typography>Меню не найдено</Typography>;
 
   return (
     <div>
-      <Header>
+      <Header backUrl="/">
         <EditableText
           variant="h4"
           isEdit={isEdit}
@@ -29,9 +29,17 @@ export const WeekMenu = () => {
         />
         <EditButton onClick={() => setEdit((e) => !e)} selected={isEdit} />
       </Header>
-      {menu.days.map((day, nDay) => (
-        <MenuDay day={day} isEdit={isEdit} menuId={id} nDay={nDay} />
-      ))}
+      <Stack gap={isEdit ? 2 : 1} sx={{ marginTop: 2 }}>
+        {menu.days.map((day, nDay) => (
+          <MenuDay
+            day={day}
+            isEdit={isEdit}
+            menuId={id}
+            nDay={nDay}
+            key={nDay}
+          />
+        ))}
+      </Stack>
     </div>
   );
 };
@@ -44,18 +52,16 @@ interface MenuDayProps {
 }
 
 function MenuDay({ day, isEdit, menuId, nDay }: MenuDayProps) {
-  const { updateDay } = useMenuStore();
+  const meals = isEdit ? [...day.meals, { type: "", dishes: [] }] : day.meals;
+
   return (
     <div key={day.day}>
-      <EditableText
-        variant="h6"
-        isEdit={isEdit}
-        value={day.day}
-        setValue={(val) => updateDay(menuId, nDay, val)}
-      ></EditableText>
+      <Typography variant="h6" fontWeight={"bold"}>
+        {day.day}
+      </Typography>
       <List>
-        {day.meals.map((meal, nMeal) => (
-          <ListItem key={meal.type} sx={{ alignItems: "flex-end" }}>
+        {meals.map((meal, nMeal) => (
+          <ListItem key={nMeal} sx={{ alignItems: "flex-end" }}>
             <MenuMeal
               isEdit={isEdit}
               meal={meal}
@@ -81,22 +87,29 @@ interface MenuMealProps {
 function MenuMeal({ meal, isEdit, menuId, nDay, nMeal }: MenuMealProps) {
   const { updateMeal } = useMenuStore();
   return (
-    <>
+    <Stack direction={"row"}>
       <EditableText
+        label={"Прием пищи"}
         value={meal.type}
         isEdit={isEdit}
         setValue={(val) => updateMeal(menuId, nDay, nMeal, val)}
         sx={{ fontWeight: "bold" }}
       />
-      :{" "}
-      <DishSelect
-        isEdit={isEdit}
-        dishes={meal.dishes}
-        menuId={menuId}
-        nDay={nDay}
-        nMeal={nMeal}
-      />
-    </>
+      :
+      <div
+        css={css`
+          margin-left: 6px;
+        `}
+      >
+        <DishSelect
+          isEdit={isEdit}
+          dishes={meal.dishes}
+          menuId={menuId}
+          nDay={nDay}
+          nMeal={nMeal}
+        />
+      </div>
+    </Stack>
   );
 }
 
@@ -113,7 +126,7 @@ function DishSelect({ isEdit, dishes, menuId, nDay, nMeal }: DishSelectProps) {
   const dishesList = getDishesList();
   return isEdit ? (
     <MultiSelect
-      label="Ингридиенты"
+      label="Список блюд"
       value={dishesList.filter((d) => dishes.includes(d.id))}
       options={dishesList}
       toStr={(d) => d.name}
@@ -121,7 +134,36 @@ function DishSelect({ isEdit, dishes, menuId, nDay, nMeal }: DishSelectProps) {
     />
   ) : (
     dishes
-      .map((id) => dishesList.find((dish) => dish.id == id)?.name ?? "")
-      .join(", ")
+      .map((id) => dishesList.find((dish) => dish.id == id))
+      .filter((d) => d)
+      .map((d) => <MenuDishIngredients dish={d!} key={d?.id} />)
+  );
+}
+
+interface MenuDishIngredientsProps {
+  dish: Dish;
+}
+
+function MenuDishIngredients({ dish }: MenuDishIngredientsProps) {
+  const ingredientsView = dish.ingredients.map((ingredient) => (
+    <Typography variant="body1" color="text.secondary" key={ingredient.name}>
+      {ingredient.name}: {ingredient.count} {ingredient.unit}
+    </Typography>
+  ));
+
+  return (
+    <>
+      <TextWithPopover
+        id={dish.id}
+        popup={
+          <>
+            {ingredientsView}
+            <Link to={"/dishes/" + dish.id}>Изменить</Link>
+          </>
+        }
+      >
+        {dish.name}
+      </TextWithPopover>
+    </>
   );
 }
