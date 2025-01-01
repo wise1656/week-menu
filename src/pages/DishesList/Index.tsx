@@ -86,7 +86,7 @@ function Ingredients({ dish, isEdit }: IngredientsProps) {
     <>
       {ingredients.map((ingredient, nIngr) =>
         isEdit ? (
-          <Stack direction={"row"}>
+          <Stack direction={"row"} key={nIngr}>
             <TextEdit
               value={ingredient.name}
               onChangeValue={(val) => updateIngredient({ name: val }, nIngr)}
