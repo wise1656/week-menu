@@ -14,8 +14,8 @@ export const TextEditWithVariants = ({
     <Autocomplete
       freeSolo
       options={options}
-      value={value as st}
-      onChange={(_e, val: string) => onChangeValue(val)}
+      value={value}
+      onChange={(_e, val: any) => onChangeValue(val)}
       sx={sx}
       renderInput={(params) => (
         <TextField
