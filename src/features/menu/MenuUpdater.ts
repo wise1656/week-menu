@@ -3,6 +3,7 @@ import { Menu, MenuStore, Dish } from "./types";
 import { GetState, SetState } from "../../shared/types";
 import { EmptyMenu } from "./consts";
 import { clone } from "../../shared/helpers/clone";
+import { generateNewId } from "../../shared/helpers/generateId";
 
 export function getMenuUpdater(
   get: GetState<MenuStore>,
@@ -16,7 +17,7 @@ export function getMenuUpdater(
     addNewMenu: (): void => {
       set(
         produce((state: MenuStore): void => {
-          const newId = getNewId(state.menus);
+          const newId = generateNewId(state.menus);
           state.menus.push({ ...clone(EmptyMenu), id: newId });
         })
       );
@@ -35,7 +36,7 @@ export function getMenuUpdater(
         produce((state: MenuStore): void => {
           const menu = state.menus.find((m) => m.id == id);
           if (!menu) return;
-          const newId = getNewId(state.menus);
+          const newId = generateNewId(state.menus);
           state.menus.push({ ...clone(menu), id: newId });
         })
       );
@@ -101,12 +102,26 @@ export function getMenuUpdater(
         })
       );
     },
+
+    addDishToMeal: (
+      menuId: string,
+      nDay: number,
+      nMeal: number,
+      dishId: string
+    ) => {
+      set(
+        produce((state: MenuStore) => {
+          const menu = state.menus.find((menu) => menu.id === menuId);
+          if (!menu) return;
+          const day = menu.days[nDay];
+          if (!day) return;
+          const meal = day.meals[nMeal];
+          if (!meal) return;
+          meal.dishes.push(dishId);
+        })
+      );
+    },
   };
 }
 
 export type MenuUpdater = ReturnType<typeof getMenuUpdater>;
-
-function getNewId<T extends object>(arr: T[], getId?: (obj: T) => number) {
-  getId = getId ?? ((obj: any) => +obj.id);
-  return (Math.max(...arr.map(getId)) + 1).toString();
-}

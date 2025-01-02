@@ -158,13 +158,14 @@ export const defaultMenuValue: MenuStore = {
     {
       id: "1",
       name: "Oatmeal",
+      groupName: "",
       ingredients: [
         { name: "Яйцо", count: 1, unit: "шт" },
         { name: "Молоко", count: 0.1, unit: "л" },
       ],
     },
-    { id: "2", name: "Soup", ingredients: [] },
-    { id: "3", name: "Grilled Chicken", ingredients: [] },
-    { id: "4", name: "New soup", ingredients: [] },
+    { id: "2", name: "Soup", groupName: "", ingredients: [] },
+    { id: "3", name: "Grilled Chicken", groupName: "", ingredients: [] },
+    { id: "4", name: "New soup", groupName: "", ingredients: [] },
   ],
 };

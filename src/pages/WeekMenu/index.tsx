@@ -123,19 +123,28 @@ interface DishSelectProps {
 }
 
 function DishSelect({ isEdit, dishes, menuId, nDay, nMeal }: DishSelectProps) {
-  const { setDishesToMeal, getDishesList } = useMenuStore();
+  const { setDishesToMeal, addDishToMeal, getDishesList, addDish } =
+    useMenuStore();
   const dishesList = getDishesList();
+  const dishesAtMeal = dishesList.filter((d) => dishes.includes(d.id));
+  const addNewDish = (dishName: string) => {
+    const id = addDish("", dishName);
+    if (id) addDishToMeal(menuId, nDay, nMeal, id);
+  };
+
   return isEdit ? (
     <MultiSelect
       label="Список блюд"
-      value={dishesList.filter((d) => dishes.includes(d.id))}
+      value={dishesAtMeal}
       options={dishesList}
+      onAddNewVal={addNewDish}
       toStr={(d) => d.name}
-      onChange={(val) => setDishesToMeal(menuId, nDay, nMeal, val)}
+      onChange={(val: Dish[]): void =>
+        setDishesToMeal(menuId, nDay, nMeal, val)
+      }
     />
   ) : (
-    dishes
-      .map((id) => dishesList.find((dish) => dish.id == id))
+    dishesAtMeal
       .filter((d) => d)
       .map((d) => <MenuDishIngredients dish={d!} key={d?.id} />)
   );

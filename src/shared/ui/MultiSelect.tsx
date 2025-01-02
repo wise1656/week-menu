@@ -1,4 +1,5 @@
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, Button, TextField } from "@mui/material";
+import { useState } from "react";
 
 interface MultiSelectProps<T> {
   label: string;
@@ -6,6 +7,7 @@ interface MultiSelectProps<T> {
   value: T[];
   toStr?: (val: T) => string;
   onChange: (value: T[]) => void;
+  onAddNewVal?: (newVal: string) => void; // если значения в списке нет, показывать кнопку добавить и вызывать этот обработчик по клику
 }
 
 export function MultiSelect<T extends object | string>({
@@ -14,12 +16,16 @@ export function MultiSelect<T extends object | string>({
   onChange,
   label,
   toStr,
+  onAddNewVal,
 }: MultiSelectProps<T>) {
   const handleChange = (_e: any, newValue: T[]) => {
     onChange(newValue);
   };
-
   const toStrVal = (obj: T) => (toStr ? toStr(obj) : obj.toString());
+  const [inputVal, setInputVal] = useState("");
+  const addNewBtn = onAddNewVal && (
+    <Button onClick={() => onAddNewVal(inputVal)}>Добавить</Button>
+  );
 
   return (
     <Autocomplete
@@ -29,6 +35,7 @@ export function MultiSelect<T extends object | string>({
       getOptionLabel={(o) => toStrVal(o)}
       value={value}
       onChange={handleChange}
+      noOptionsText={addNewBtn}
       renderTags={
         (value: T[], _getTagProps) => value.map(toStrVal).map((o) => o + ", ")
         // .map((option, index) => (
@@ -41,7 +48,14 @@ export function MultiSelect<T extends object | string>({
         // ))
       }
       renderInput={(params) => (
-        <TextField {...params} variant="standard" label={label} />
+        <TextField
+          {...params}
+          variant="standard"
+          label={label}
+          onChange={(e) => {
+            setInputVal(e.target.value);
+          }}
+        />
       )}
     />
   );

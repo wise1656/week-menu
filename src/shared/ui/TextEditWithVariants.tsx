@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Autocomplete, TextField } from "@mui/material";
 import { TextEditProps } from "./TextEdit";
 
@@ -10,12 +11,19 @@ export const TextEditWithVariants = ({
   sx,
   ...otherProps
 }: TextEditWithVariantsProps) => {
+  const [innerValue, setInnerValue] = useState(value as string);
+
+  useEffect(() => {
+    setInnerValue(value as string);
+  }, [value]);
+
   return (
     <Autocomplete
       freeSolo
       options={options}
       value={value}
-      onChange={(_e, val: any) => onChangeValue(val)}
+      onChange={(_e, val: any) => setInnerValue(val)}
+      onBlur={() => onChangeValue(innerValue)}
       sx={sx}
       renderInput={(params) => (
         <TextField
@@ -23,7 +31,7 @@ export const TextEditWithVariants = ({
           variant="standard"
           size="small"
           {...otherProps}
-          onChange={(e) => onChangeValue(e.target.value)}
+          onChange={(e) => setInnerValue(e.target.value)}
         />
       )}
     />

@@ -5,14 +5,16 @@ import ListIcon from "@mui/icons-material/List";
 
 export const MenuList = () => {
   const { menus } = useMenuStore();
-  const { addNewMenu, deleteMenu, duplicateMenu } = useMenuStore();
+  const { addNewMenu, deleteMenu, duplicateMenu, importDishes } =
+    useMenuStore();
 
   return (
-    <>
+    <Stack alignItems={"flex-start"}>
       <Stack
         direction={"row"}
         justifyContent={"space-between"}
         alignItems={"flex-end"}
+        align-self={"stretch"}
       >
         <Typography variant="h4">Список Меню</Typography>
         <Link to="/dishes">
@@ -37,6 +39,9 @@ export const MenuList = () => {
       <Button size="small" onClick={addNewMenu}>
         Создать новое
       </Button>
-    </>
+      <Button size="small" onClick={importDishes}>
+        Импорт данных
+      </Button>
+    </Stack>
   );
 };

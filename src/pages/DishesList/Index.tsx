@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Typography, Collapse, Stack, Button } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -12,17 +12,33 @@ import { Header } from "../../shared/ui/Header";
 import { TextEditWithVariants } from "../../shared/ui/TextEditWithVariants";
 
 export const DishesList = () => {
-  const { getDishesList } = useMenuStore();
-  const dishes = getDishesList();
+  const { getDishesGroups, addDish } = useMenuStore();
+  useScrollToSelected();
+  const dishesGroups = getDishesGroups();
 
   return (
     <div>
       <Header>
         <Typography variant="h4">Список блюд</Typography>
       </Header>
-      <Stack spacing={1}>
-        {dishes.map((dish) => (
-          <DishView dish={dish} key={dish.id} />
+      <Stack spacing={4} marginTop={3}>
+        {dishesGroups.map((group) => (
+          <Stack key={group.groupName}>
+            <Typography variant="h5" fontWeight={"bold"}>
+              {group.groupName}
+            </Typography>
+            <Stack>
+              {group.dishes.map((dish) => (
+                <DishView dish={dish} key={dish.id} />
+              ))}
+            </Stack>
+            <Button
+              onClick={() => addDish(group.groupName)}
+              sx={{ alignSelf: "flex-start" }}
+            >
+              + Добавить блюдо
+            </Button>
+          </Stack>
         ))}
       </Stack>
     </div>
@@ -35,33 +51,55 @@ interface DishProps {
 
 function DishView({ dish }: DishProps) {
   const { id } = useParams();
-  const [isOpen, setIsOpen] = useState(dish.id == id);
-  const [isEdit, setIsEdit] = useState(dish.id == id);
+  const openEditOnStart = dish.id == id || dish.name == "";
+  const [isOpen, setIsOpen] = useState(openEditOnStart);
+  const [isEdit, setIsEdit] = useState(openEditOnStart);
   const toggleOpen = () => setIsOpen((v) => !v);
   const toggleEdit = () => setIsEdit((v) => !v);
-  const { renameDish } = useMenuStore();
+  const { renameDish, deleteDish, changeGroup, getDishGroupsNames } =
+    useMenuStore();
 
   return (
-    <div>
-      <div style={{ display: "flex", alignItems: "center" }}>
+    <div id={dish.id}>
+      <Stack alignItems={"center"} direction={"row"}>
         <EditableText
+          label="название"
           variant="h6"
           isEdit={isEdit}
           value={dish.name}
           onClick={toggleOpen}
           setValue={(val) => renameDish(dish.id, val)}
         />
+        {isEdit && (
+          <TextEditWithVariants
+            label="категория"
+            value={dish.groupName}
+            onChangeValue={(val) => changeGroup(dish.id, val)}
+            options={getDishGroupsNames()}
+            sx={{ flex: 1 }}
+          />
+        )}
         {isOpen ? (
           <ExpandLessIcon onClick={toggleOpen} />
         ) : (
           <ExpandMoreIcon onClick={toggleOpen} />
         )}
-      </div>
+      </Stack>
       <Collapse in={isOpen}>
         <Ingredients dish={dish} isEdit={isEdit} />
-        <Button size="small" onClick={toggleEdit}>
-          {isEdit ? "Ok" : "Изменить"}
-        </Button>
+        <Stack direction={"row"} gap={1}>
+          <Button size="small" onClick={toggleEdit}>
+            {isEdit ? "Ok" : "Изменить"}
+          </Button>
+          <Button
+            size="small"
+            onClick={() => deleteDish(dish.id)}
+            color={"error"}
+          >
+            Удалить
+          </Button>
+        </Stack>
+        <div style={{ marginBottom: 5 }} />
       </Collapse>
     </div>
   );
@@ -123,3 +161,17 @@ function Ingredients({ dish, isEdit }: IngredientsProps) {
     </>
   );
 }
+
+const useScrollToSelected = () => {
+  const { id } = useParams();
+  useEffect(() => {
+    if (id) {
+      const targetElement = document.getElementById(id); // Находим элемент
+      // Прокручиваем к элементу с плавной анимацией
+      targetElement?.scrollIntoView({
+        behavior: "smooth",
+        block: "start", // Выравнивание по верхней части области просмотра
+      });
+    }
+  }, []);
+};
