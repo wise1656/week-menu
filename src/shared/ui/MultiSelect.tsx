@@ -24,7 +24,9 @@ export function MultiSelect<T extends object | string>({
   const toStrVal = (obj: T) => (toStr ? toStr(obj) : obj.toString());
   const [inputVal, setInputVal] = useState("");
   const addNewBtn = onAddNewVal && (
-    <Button onClick={() => onAddNewVal(inputVal)}>Добавить</Button>
+    <Button size="small" onClick={() => onAddNewVal(inputVal)}>
+      Добавить
+    </Button>
   );
 
   return (
@@ -36,16 +38,8 @@ export function MultiSelect<T extends object | string>({
       value={value}
       onChange={handleChange}
       noOptionsText={addNewBtn}
-      renderTags={
-        (value: T[], _getTagProps) => value.map(toStrVal).map((o) => o + ", ")
-        // .map((option, index) => (
-        // <Chip
-        //   variant="outlined"
-        //   label={option}
-        //   {...getTagProps({ index })}
-        //   key={option}
-        // />
-        // ))
+      renderTags={(value: T[], _getTagProps) =>
+        value.map(toStrVal).map((o) => o + ", ")
       }
       renderInput={(params) => (
         <TextField

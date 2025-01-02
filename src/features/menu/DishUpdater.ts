@@ -1,7 +1,6 @@
 import { produce } from "immer";
 import { Dish, DishGroup, Ingredient, MenuStore } from "./types";
 import { GetState, SetState } from "../../shared/types";
-import { loadFile } from "../../shared/helpers/loadFile";
 import { generateNewId } from "../../shared/helpers/generateId";
 
 export const getDishUpdater = (
@@ -105,9 +104,19 @@ export const getDishUpdater = (
   },
 
   importDishes: async () => {
-    const src = await loadFile();
-    const data = JSON.parse(src);
+    const resp = await fetch(
+      "https://functions.yandexcloud.net/d4ebrnlthjs0ghcce0j5"
+    );
+    const data = await resp.json();
     set({ dishes: data });
+  },
+
+  exportDishes: async () => {
+    fetch("https://functions.yandexcloud.net/d4ebrnlthjs0ghcce0j5", {
+      method: "POST",
+      body: JSON.stringify(get().dishes),
+      headers: { "Content-Type": "application/json" },
+    });
   },
 });
 

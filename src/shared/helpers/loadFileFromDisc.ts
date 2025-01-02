@@ -1,4 +1,4 @@
-export async function loadFile() {
+export async function loadFileFromDisc() {
   try {
     // Открываем диалог выбора файла
     const [fileHandle] = await (window as any).showOpenFilePicker();

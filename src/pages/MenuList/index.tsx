@@ -5,7 +5,7 @@ import ListIcon from "@mui/icons-material/List";
 
 export const MenuList = () => {
   const { menus } = useMenuStore();
-  const { addNewMenu, deleteMenu, duplicateMenu, importDishes } =
+  const { addNewMenu, deleteMenu, duplicateMenu, importDishes, exportDishes } =
     useMenuStore();
 
   return (
@@ -41,6 +41,9 @@ export const MenuList = () => {
       </Button>
       <Button size="small" onClick={importDishes}>
         Импорт данных
+      </Button>
+      <Button size="small" onClick={exportDishes}>
+        Экспорт данных
       </Button>
     </Stack>
   );
