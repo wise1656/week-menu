@@ -130,7 +130,9 @@ function DishSelect({ isEdit, dishes, menuId, nDay, nMeal }: DishSelectProps) {
   const { setDishesToMeal, addDishToMeal, getDishesList, addDish } =
     useMenuStore();
   const dishesList = getDishesList();
-  const dishesAtMeal = dishesList.filter((d) => dishes.includes(d.id));
+  const dishesAtMeal = dishesList
+    .filter((d) => dishes.includes(d.id))
+    .filter((d) => d);
   const addNewDish = (dishName: string) => {
     const id = addDish("", dishName);
     if (id) addDishToMeal(menuId, nDay, nMeal, id);
@@ -148,9 +150,14 @@ function DishSelect({ isEdit, dishes, menuId, nDay, nMeal }: DishSelectProps) {
       }
     />
   ) : (
-    dishesAtMeal
-      .filter((d) => d)
-      .map((d) => <MenuDishIngredients dish={d!} key={d?.id} />)
+    <Stack direction={"row"} gap={1}>
+      {dishesAtMeal.map((d, i) => (
+        <Stack direction={"row"}>
+          <MenuDishIngredients dish={d!} key={d?.id} />
+          {i < dishesAtMeal.length - 1 && ","}
+        </Stack>
+      ))}
+    </Stack>
   );
 }
 
@@ -164,6 +171,7 @@ function MenuDishIngredients({ dish }: MenuDishIngredientsProps) {
       {ingredient.name}: {ingredient.count} {ingredient.unit}
     </Typography>
   ));
+  const hasIngredients = dish.ingredients.length > 0;
 
   return (
     <>
@@ -171,12 +179,29 @@ function MenuDishIngredients({ dish }: MenuDishIngredientsProps) {
         id={dish.id}
         popup={
           <>
-            {ingredientsView}
+            {hasIngredients ? (
+              ingredientsView
+            ) : (
+              <Typography color="error">Ингридиенты не заполнены</Typography>
+            )}
             <Link to={"/dishes/" + dish.id}>Изменить</Link>
           </>
         }
       >
-        {dish.name}
+        <Stack direction={"row"}>
+          <Typography
+            sx={
+              !hasIngredients
+                ? {
+                    textDecoration: "underline",
+                    textDecorationColor: "#d32f2f",
+                  }
+                : undefined
+            }
+          >
+            {dish.name}
+          </Typography>
+        </Stack>
       </TextWithPopover>
     </>
   );

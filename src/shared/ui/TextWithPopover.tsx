@@ -9,7 +9,7 @@ interface TextWithPopoverProps {
 
 export function TextWithPopover({ children, popup, id }: TextWithPopoverProps) {
   const [isShowIngreds, setIsShowIngreds] = useState(false);
-  const anchorRef = useRef<HTMLElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
   const toggle = () => setIsShowIngreds((s) => !s);
   return (
     <>
