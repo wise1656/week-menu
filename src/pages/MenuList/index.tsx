@@ -27,12 +27,14 @@ export const MenuList = () => {
             <Link to={`/weekly-menu/${menu.id}`}>
               <Typography variant="h5">{menu.name}</Typography>{" "}
             </Link>
-            <Button size="small" onClick={() => duplicateMenu(menu.id)}>
-              Дублировать
-            </Button>
-            <Button size="small" onClick={() => deleteMenu(menu.id)}>
-              Удалить
-            </Button>
+            <Stack direction={"column"} alignItems={"flex-end"}>
+              <Button size="small" onClick={() => duplicateMenu(menu.id)}>
+                Дублировать
+              </Button>
+              <Button size="small" onClick={() => deleteMenu(menu.id)}>
+                Удалить
+              </Button>
+            </Stack>
           </ListItem>
         ))}
       </List>

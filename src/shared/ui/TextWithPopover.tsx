@@ -1,24 +1,24 @@
-import { useRef, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 import { Popper, Box, ClickAwayListener } from "@mui/material";
 
 interface TextWithPopoverProps {
   children: any;
-  popup: any;
+  popup: ReactNode;
   id?: string;
 }
 
 export function TextWithPopover({ children, popup, id }: TextWithPopoverProps) {
   const [isShowIngreds, setIsShowIngreds] = useState(false);
-  const anchorRef = useRef(null);
+  const anchorRef = useRef<HTMLElement>(null);
   const toggle = () => setIsShowIngreds((s) => !s);
   return (
     <>
-      <span ref={anchorRef} onClick={toggle}>
+      <div ref={anchorRef} onClick={toggle}>
         {children}
-      </span>
+      </div>
       <ClickAwayListener
         onClickAway={(e) => {
-          if (e.target != anchorRef.current) toggle();
+          if (!anchorRef.current?.contains(e.target as any)) toggle();
         }}
       >
         <Popper id={id} open={isShowIngreds} anchorEl={anchorRef.current}>

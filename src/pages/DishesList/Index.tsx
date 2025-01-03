@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Typography, Collapse, Stack, Button } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -49,7 +49,7 @@ interface DishProps {
   dish: Dish;
 }
 
-function DishView({ dish }: DishProps) {
+const DishView = memo(({ dish }: DishProps) => {
   const { id } = useParams();
   const openEditOnStart = dish.id == id || dish.name == "";
   const [isOpen, setIsOpen] = useState(openEditOnStart);
@@ -103,7 +103,7 @@ function DishView({ dish }: DishProps) {
       </Collapse>
     </div>
   );
-}
+});
 
 interface IngredientsProps {
   dish: Dish;

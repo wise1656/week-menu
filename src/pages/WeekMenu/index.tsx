@@ -9,6 +9,7 @@ import { Header } from "../../shared/ui/Header";
 import { Day, Dish, Meal } from "../../features/menu/types";
 import { MultiSelect } from "../../shared/ui/MultiSelect";
 import { TextWithPopover } from "../../shared/ui/TextWithPopover";
+import ChecklistIcon from "@mui/icons-material/Checklist";
 
 export const WeekMenu = () => {
   const { id } = useParams();
@@ -28,6 +29,9 @@ export const WeekMenu = () => {
           setValue={(val) => updateMenuName(id, val)}
         />
         <EditButton onClick={() => setEdit((e) => !e)} selected={isEdit} />
+        <Link to="./shopping">
+          <ChecklistIcon />
+        </Link>
       </Header>
       <Stack gap={isEdit ? 2 : 1} sx={{ marginTop: 2 }}>
         {menu.days.map((day, nDay) => (
