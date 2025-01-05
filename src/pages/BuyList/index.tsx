@@ -2,10 +2,9 @@ import { Link, useParams } from "react-router-dom";
 import { useBuyList } from "./store";
 import { useMenuStore } from "../../features/menu/store";
 import { Header } from "../../shared/ui/Header";
-import { Checkbox, FormControlLabel, Stack, Typography } from "@mui/material";
+import { Checkbox, Stack, Typography } from "@mui/material";
 import { getIngredientsList, IngredientsList } from "./checkListHelper";
 import { TextWithPopover } from "../../shared/ui/TextWithPopover";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 export const BuyList = () => {
   const { id } = useParams();
@@ -48,12 +47,7 @@ function CheckBoxItem({ name, value, checked, dishes }: CheckBoxItemProps) {
 
   return (
     <Stack direction={"row"} alignItems={"center"}>
-      <FormControlLabel
-        control={
-          <Checkbox checked={checked} onChange={() => checkItem(id!, name)} />
-        }
-        label={value}
-      />
+      <Checkbox checked={checked} onChange={() => checkItem(id!, name)} />
       <TextWithPopover
         id={name}
         popup={
@@ -68,7 +62,7 @@ function CheckBoxItem({ name, value, checked, dishes }: CheckBoxItemProps) {
           </Stack>
         }
       >
-        <HelpOutlineIcon fontSize="small" />
+        <Typography>{value}</Typography>
       </TextWithPopover>
     </Stack>
   );

@@ -113,9 +113,12 @@ export const getDishUpdater = (
 
   exportDishes: async () => {
     fetch("https://functions.yandexcloud.net/d4ebrnlthjs0ghcce0j5", {
-      method: "POST",
       body: JSON.stringify(get().dishes),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "text/plain",
+      },
+      method: "POST",
+      mode: "cors",
     });
   },
 });
