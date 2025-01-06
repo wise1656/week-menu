@@ -99,6 +99,7 @@ export const getDishUpdater = (
         const dish = state.dishes.find((d) => d.id == dishId);
         if (!dish) return;
         dish.ingredients[nIngr] = ingredient;
+        dish.ingredients = dish.ingredients.filter((i) => i.name);
       })
     );
   },

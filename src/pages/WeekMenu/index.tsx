@@ -1,39 +1,46 @@
 /** @jsxImportSource @emotion/react */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Typography, List, ListItem, Stack, css } from "@mui/material";
 import { useMenuStore } from "../../features/menu/store";
 import { EditableText } from "../../shared/ui/Editable";
 import { EditButton } from "../../shared/ui/EditButton";
-import { Header } from "../../shared/ui/Header";
 import { Day, Dish, Meal } from "../../features/menu/types";
 import { MultiSelect } from "../../shared/ui/MultiSelect";
 import { TextWithPopover } from "../../shared/ui/TextWithPopover";
-import ChecklistIcon from "@mui/icons-material/Checklist";
+import TopMenu from "../../shared/ui/TopMenu";
 
 export const WeekMenu = () => {
   const { id } = useParams();
-  const { getMenuById, updateMenuName } = useMenuStore();
+  const { getMenuById, updateMenuName, setLastMenu } = useMenuStore();
   const menu = getMenuById(id!);
   const [isEdit, setEdit] = useState(false);
+
+  useEffect(() => {
+    if (id) setLastMenu(id);
+  }, []);
 
   if (!menu || !id) return <Typography>Меню не найдено</Typography>;
 
   return (
     <div>
-      <Header backUrl="/">
-        <EditableText
-          variant="h4"
-          isEdit={isEdit}
-          value={menu.name}
-          setValue={(val) => updateMenuName(id, val)}
-        />
+      <TopMenu
+        title={
+          <EditableText
+            variant="h6"
+            isEdit={isEdit}
+            value={menu.name}
+            setValue={(val) => updateMenuName(id, val)}
+            color="white"
+          />
+        }
+        showBack
+        backToUrl="/"
+      >
         <EditButton onClick={() => setEdit((e) => !e)} selected={isEdit} />
-        <Link to="./shopping">
-          <ChecklistIcon />
-        </Link>
-      </Header>
-      <Stack gap={isEdit ? 2 : 1} sx={{ marginTop: 2 }}>
+      </TopMenu>
+
+      <Stack gap={isEdit ? 2 : 1}>
         {menu.days.map((day, nDay) => (
           <MenuDay
             day={day}
@@ -152,7 +159,7 @@ function DishSelect({ isEdit, dishes, menuId, nDay, nMeal }: DishSelectProps) {
   ) : (
     <Stack direction={"row"} gap={1}>
       {dishesAtMeal.map((d, i) => (
-        <Stack direction={"row"}>
+        <Stack direction={"row"} key={i}>
           <MenuDishIngredients dish={d!} key={d?.id} />
           {i < dishesAtMeal.length - 1 && ","}
         </Stack>

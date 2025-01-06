@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { memo, useEffect, useState } from "react";
-import { Typography, Collapse, Stack, Button } from "@mui/material";
+import { Typography, Collapse, Stack, Button, Box } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useMenuStore } from "../../features/menu/store";
@@ -8,8 +8,8 @@ import { Dish, Ingredient } from "../../features/menu/types";
 import { EditableText } from "../../shared/ui/Editable";
 import { TextEdit } from "../../shared/ui/TextEdit";
 import { useParams } from "react-router-dom";
-import { Header } from "../../shared/ui/Header";
 import { TextEditWithVariants } from "../../shared/ui/TextEditWithVariants";
+import TopMenu from "../../shared/ui/TopMenu";
 
 export const DishesList = () => {
   const { getDishesGroups, addDish } = useMenuStore();
@@ -17,11 +17,9 @@ export const DishesList = () => {
   const dishesGroups = getDishesGroups();
 
   return (
-    <div>
-      <Header>
-        <Typography variant="h4">Список блюд</Typography>
-      </Header>
-      <Stack spacing={4} marginTop={3}>
+    <Box>
+      <TopMenu title="Список блюд" showBack />
+      <Stack spacing={4}>
         {dishesGroups.map((group) => (
           <Stack key={group.groupName}>
             <Typography variant="h5" fontWeight={"bold"}>
@@ -41,7 +39,7 @@ export const DishesList = () => {
           </Stack>
         ))}
       </Stack>
-    </div>
+    </Box>
   );
 };
 

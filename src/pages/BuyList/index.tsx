@@ -1,16 +1,25 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useBuyList } from "./store";
 import { useMenuStore } from "../../features/menu/store";
-import { Header } from "../../shared/ui/Header";
-import { Checkbox, Stack, Typography } from "@mui/material";
+import {
+  Link as MuiLink,
+  Breadcrumbs,
+  Checkbox,
+  Stack,
+  Typography,
+  IconButton,
+} from "@mui/material";
 import { getIngredientsList, IngredientsList } from "./checkListHelper";
 import { TextWithPopover } from "../../shared/ui/TextWithPopover";
+import TopMenu from "../../shared/ui/TopMenu";
+import UnpublishedIcon from "@mui/icons-material/Unpublished";
 
 export const BuyList = () => {
   const { id } = useParams();
   const { getDishesList, getMenuById } = useMenuStore();
   const menu = getMenuById(id!);
-  const { isItemChecked } = useBuyList();
+  const { isItemChecked, clearChecks } = useBuyList();
+  const navigate = useNavigate();
 
   if (!id || !menu) return <Typography>Меню не найдено</Typography>;
 
@@ -25,9 +34,45 @@ export const BuyList = () => {
 
   return (
     <div>
-      <Header>
-        <Typography variant="h4">Список для {menu.name}</Typography>
-      </Header>
+      <TopMenu
+        title={
+          <Stack
+            direction={"row"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
+            <Breadcrumbs
+              sx={{
+                size: 16,
+                "& .MuiBreadcrumbs-separator": {
+                  color: "white", // цвет разделителя
+                },
+              }}
+            >
+              <MuiLink
+                sx={{
+                  fontSize: "1.25rem",
+                  color: "white",
+                  textDecoration: "underline",
+                  ":hover": { color: "white", textDecoration: "none" },
+                }}
+                onClick={() => navigate(`/weekly-menu/${id}`)}
+              >
+                {menu.name}
+              </MuiLink>
+
+              <Typography sx={{ color: "white", fontSize: "1.25rem" }}>
+                Список
+              </Typography>
+            </Breadcrumbs>
+            <IconButton onClick={() => clearChecks(id)}>
+              <UnpublishedIcon sx={{ color: "white" }} />
+            </IconButton>
+          </Stack>
+        }
+        showBack
+        backToUrl={`/weekly-menu/${id}`}
+      />
       <Stack>
         {sortedList.map((item, n) => (
           <CheckBoxItem {...item} key={n} />

@@ -1,52 +1,41 @@
-import { Link } from "react-router-dom";
-import { Button, List, ListItem, Stack, Typography } from "@mui/material";
+import { Fab, Stack } from "@mui/material";
 import { useMenuStore } from "../../features/menu/store";
-import ListIcon from "@mui/icons-material/List";
+import TopMenu from "../../shared/ui/TopMenu";
+import { MenuListItem } from "./MenuListItem";
+import AddIcon from "@mui/icons-material/Add"; // Импорт иконки
 
 export const MenuList = () => {
   const { menus } = useMenuStore();
-  const { addNewMenu, deleteMenu, duplicateMenu, importDishes, exportDishes } =
-    useMenuStore();
+  const { addNewMenu } = useMenuStore();
 
   return (
-    <Stack alignItems={"flex-start"}>
-      <Stack
-        direction={"row"}
-        justifyContent={"space-between"}
-        alignItems={"flex-end"}
-        align-self={"stretch"}
-      >
-        <Typography variant="h4">Список Меню</Typography>
-        <Link to="/dishes">
-          <ListIcon fontSize="large" />
-        </Link>
+    <Stack>
+      <TopMenu title="Недельное меню" />
+      <Stack alignItems={"flex-start"}>
+        <Stack gap={1} sx={{ width: "100%" }}>
+          {menus.map((menu) => (
+            <MenuListItem menu={menu} key={menu.id} />
+          ))}
+        </Stack>
+
+        {/* <Button size="small" onClick={importDishes}>
+          Импорт данных
+        </Button>
+        <Button size="small" onClick={exportDishes}>
+          Экспорт данных
+        </Button> */}
+        <Fab
+          color="primary"
+          onClick={addNewMenu}
+          sx={{
+            position: "fixed",
+            bottom: 70,
+            right: 16,
+          }}
+        >
+          <AddIcon />
+        </Fab>
       </Stack>
-      <List>
-        {menus.map((menu) => (
-          <ListItem key={menu.id}>
-            <Link to={`/weekly-menu/${menu.id}`}>
-              <Typography variant="h5">{menu.name}</Typography>{" "}
-            </Link>
-            <Stack direction={"column"} alignItems={"flex-end"}>
-              <Button size="small" onClick={() => duplicateMenu(menu.id)}>
-                Дублировать
-              </Button>
-              <Button size="small" onClick={() => deleteMenu(menu.id)}>
-                Удалить
-              </Button>
-            </Stack>
-          </ListItem>
-        ))}
-      </List>
-      <Button size="small" onClick={addNewMenu}>
-        Создать новое
-      </Button>
-      <Button size="small" onClick={importDishes}>
-        Импорт данных
-      </Button>
-      <Button size="small" onClick={exportDishes}>
-        Экспорт данных
-      </Button>
     </Stack>
   );
 };

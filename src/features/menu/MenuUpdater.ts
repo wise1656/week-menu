@@ -18,7 +18,7 @@ export function getMenuUpdater(
       set(
         produce((state: MenuStore): void => {
           const newId = generateNewId(state.menus);
-          state.menus.push({ ...clone(EmptyMenu), id: newId });
+          state.menus.unshift({ ...clone(EmptyMenu), id: newId });
         })
       );
     },
@@ -26,7 +26,7 @@ export function getMenuUpdater(
     deleteMenu: (id: string): void => {
       set(
         produce((state: MenuStore): void => {
-          state.menus = state.menus.filter((m) => m.id == id);
+          state.menus = state.menus.filter((m) => m.id != id);
         })
       );
     },
@@ -37,7 +37,8 @@ export function getMenuUpdater(
           const menu = state.menus.find((m) => m.id == id);
           if (!menu) return;
           const newId = generateNewId(state.menus);
-          state.menus.push({ ...clone(menu), id: newId });
+          const ind = state.menus.indexOf(menu);
+          state.menus.splice(ind, 0, { ...clone(menu), id: newId });
         })
       );
     },
@@ -121,6 +122,8 @@ export function getMenuUpdater(
         })
       );
     },
+
+    setLastMenu: (menuId: string) => set({ lastMenu: menuId }),
   };
 }
 

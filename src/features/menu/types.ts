@@ -40,4 +40,5 @@ export interface Menu {
 export interface MenuStore {
   menus: Menu[];
   dishes: Dish[];
+  lastMenu?: string;
 }

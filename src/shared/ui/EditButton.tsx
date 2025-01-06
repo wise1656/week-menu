@@ -14,7 +14,7 @@ export const EditButton = ({
       onClick={onClick}
       sx={selected ? { border: 1 } : {}}
     >
-      <EditIcon />
+      <EditIcon sx={{ color: "white" }} />
     </IconButton>
   );
 };

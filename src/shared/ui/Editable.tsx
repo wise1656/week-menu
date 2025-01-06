@@ -30,7 +30,7 @@ export const EditableText = ({
       ) : (
         <Typography
           variant="body1"
-          style={{ cursor: "pointer" }}
+          sx={{ cursor: "pointer" }}
           {...typographyProps}
         >
           {value}

@@ -23,6 +23,14 @@ const state = (set: SetState<BuyList>, get: GetState<BuyList>) => ({
       })
     );
   },
+
+  clearChecks(menuId: string) {
+    return set(
+      produce((state: BuyList) => {
+        state.list[menuId] = {};
+      })
+    );
+  },
 });
 
 export const useBuyList = create<ReturnType<typeof state>>()(
