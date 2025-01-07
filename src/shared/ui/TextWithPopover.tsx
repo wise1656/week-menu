@@ -13,9 +13,9 @@ export function TextWithPopover({ children, popup, id }: TextWithPopoverProps) {
   const toggle = () => setIsShowIngreds((s) => !s);
   return (
     <>
-      <div ref={anchorRef} onClick={toggle}>
+      <span ref={anchorRef} onClick={toggle}>
         {children}
-      </div>
+      </span>
       <ClickAwayListener
         onClickAway={(e) => {
           if (!anchorRef.current?.contains(e.target as any)) toggle();

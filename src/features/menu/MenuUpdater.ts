@@ -123,6 +123,25 @@ export function getMenuUpdater(
       );
     },
 
+    deleteDishFromMeal: (
+      menuId: string,
+      nDay: number,
+      nMeal: number,
+      dishId: string
+    ) => {
+      set(
+        produce((state: MenuStore) => {
+          const menu = state.menus.find((menu) => menu.id === menuId);
+          if (!menu) return;
+          const day = menu.days[nDay];
+          if (!day) return;
+          const meal = day.meals[nMeal];
+          if (!meal) return;
+          meal.dishes = meal.dishes.filter((d) => d != dishId);
+        })
+      );
+    },
+
     setLastMenu: (menuId: string) => set({ lastMenu: menuId }),
   };
 }

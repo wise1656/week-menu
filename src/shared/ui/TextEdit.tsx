@@ -5,6 +5,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 export type TextEditProps = TextFieldProps & {
   onChangeValue: (val: string) => void;
   clearButton?: boolean;
+  blurOnEnter?: boolean;
 };
 
 export const TextEdit = ({
@@ -12,6 +13,7 @@ export const TextEdit = ({
   onChangeValue,
   onBlur,
   clearButton,
+  blurOnEnter,
   ...otherProps
 }: TextEditProps) => {
   const [innerValue, setInnerValue] = useState(value as string);
@@ -36,6 +38,9 @@ export const TextEdit = ({
         onBlur={onBlurHandle}
         variant="standard"
         size="small"
+        onKeyDown={(e) => {
+          if (blurOnEnter && e.key === "Enter") onBlurHandle();
+        }}
         {...otherProps}
       />
       {value && clearButton ? (

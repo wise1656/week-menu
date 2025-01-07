@@ -11,6 +11,7 @@ interface EditableTextProps {
   onBlur?: () => void;
   autoFocus?: boolean;
   clearButton?: boolean;
+  blurOnEnter?: boolean;
 }
 
 export const EditableText = ({
@@ -22,6 +23,7 @@ export const EditableText = ({
   onBlur,
   autoFocus,
   clearButton,
+  blurOnEnter,
   ...typographyProps
 }: EditableTextProps & TypographyOwnProps) => {
   return (
@@ -35,6 +37,7 @@ export const EditableText = ({
           sx={{ width: editWidth }}
           autoFocus={autoFocus}
           clearButton={clearButton}
+          blurOnEnter={blurOnEnter}
         />
       ) : (
         <Typography

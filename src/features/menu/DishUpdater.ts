@@ -19,7 +19,7 @@ export const getDishUpdater = (
     return groups
       .map((g) => ({
         groupName: getGroupName(g),
-        dishes: dishes.filter((d) => d.groupName == g),
+        dishes: dishes.filter((d) => d.groupName == g).sort(compare),
       }))
       .filter((g) => g.dishes.length);
   },
@@ -125,3 +125,7 @@ export const getDishUpdater = (
 });
 
 export type DishUpdater = ReturnType<typeof getDishUpdater>;
+
+function compare(a: { name: string }, b: { name: string }) {
+  return a.name.localeCompare(b.name);
+}

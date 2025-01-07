@@ -87,19 +87,22 @@ export const MenuListItem = ({ menu }: MenuListItemProps) => {
             variant="body2"
             sx={{ color: "text.secondary", whiteSpace: "pre-wrap" }}
           >
-            {menu.days
-              .map((day) => {
-                const meals = day.meals
-                  .flatMap((m) =>
-                    m.dishes
-                      .map((dishId) => dishes.find((dish) => dish.id == dishId))
-                      .filter((d) => d)
-                  )
-                  .map((d) => d!.name)
-                  .join(", ");
-                return day.day + ": " + meals;
-              })
-              .join("\n")}
+            {menu.days.map((day) => {
+              const meals = day.meals
+                .flatMap((m) =>
+                  m.dishes
+                    .map((dishId) => dishes.find((dish) => dish.id == dishId))
+                    .filter((d) => d)
+                )
+                .map((d) => d!.name)
+                .join(", ");
+              return (
+                <>
+                  <b>{day.day}</b>: {meals}
+                  <br />
+                </>
+              );
+            })}
           </Typography>
         </CardContent>
       </Collapse>

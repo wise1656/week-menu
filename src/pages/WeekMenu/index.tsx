@@ -1,14 +1,22 @@
 /** @jsxImportSource @emotion/react */
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Typography, List, ListItem, Stack, css } from "@mui/material";
+import {
+  Typography,
+  List,
+  ListItem,
+  Stack,
+  css,
+  Chip,
+  Tooltip,
+} from "@mui/material";
 import { useMenuStore } from "../../features/menu/store";
 import { EditableText } from "../../shared/ui/Editable";
 import { EditButton } from "../../shared/ui/EditButton";
 import { Day, Dish, Meal } from "../../features/menu/types";
-import { MultiSelect } from "../../shared/ui/MultiSelect";
 import { TextWithPopover } from "../../shared/ui/TextWithPopover";
 import TopMenu from "../../shared/ui/TopMenu";
+import { AddDishButton } from "./AddDishButton";
 
 export const WeekMenu = () => {
   const { id } = useParams();
@@ -98,16 +106,16 @@ interface MenuMealProps {
 function MenuMeal({ meal, isEdit, menuId, nDay, nMeal }: MenuMealProps) {
   const { updateMeal } = useMenuStore();
   return (
-    <Stack direction={"row"} alignItems={"flex-end"}>
+    <Stack direction={"row"} alignItems={"flex-start"}>
       <EditableText
-        label={"Прием пищи"}
+        label={meal.type ? "Прием пищи" : "Новый прием пищи"}
         value={meal.type}
         isEdit={isEdit}
         onChangeValue={(val) => updateMeal(menuId, nDay, nMeal, val)}
         sx={{ fontWeight: "bold" }}
         editWidth={100}
       />
-      :
+      {!isEdit && ":"}
       <div
         css={css`
           margin-left: 6px;
@@ -119,6 +127,7 @@ function MenuMeal({ meal, isEdit, menuId, nDay, nMeal }: MenuMealProps) {
           menuId={menuId}
           nDay={nDay}
           nMeal={nMeal}
+          isEmptyMeal={meal.type == ""}
         />
       </div>
     </Stack>
@@ -131,40 +140,54 @@ interface DishSelectProps {
   menuId: string;
   nDay: number;
   nMeal: number;
+  isEmptyMeal: boolean;
 }
 
-function DishSelect({ isEdit, dishes, menuId, nDay, nMeal }: DishSelectProps) {
-  const { setDishesToMeal, addDishToMeal, getDishesList, addDish } =
-    useMenuStore();
+function DishSelect({
+  isEdit,
+  dishes,
+  menuId,
+  nDay,
+  nMeal,
+  isEmptyMeal,
+}: DishSelectProps) {
+  const { deleteDishFromMeal, getDishesList } = useMenuStore();
   const dishesList = getDishesList();
   const dishesAtMeal = dishesList
     .filter((d) => dishes.includes(d.id))
     .filter((d) => d);
-  const addNewDish = (dishName: string) => {
-    const id = addDish("", dishName);
-    if (id) addDishToMeal(menuId, nDay, nMeal, id);
-  };
+  // const addNewDish = (dishName: string) => {
+  //   const id = addDish("", dishName);
+  //   if (id) addDishToMeal(menuId, nDay, nMeal, id);
+  // };
 
-  return isEdit ? (
-    <MultiSelect
-      label="Список блюд"
-      value={dishesAtMeal}
-      options={dishesList}
-      onAddNewVal={addNewDish}
-      toStr={(d) => d.name}
-      onChange={(val: Dish[]): void =>
-        setDishesToMeal(menuId, nDay, nMeal, val)
-      }
-    />
-  ) : (
-    <Stack direction={"row"} gap={1}>
-      {dishesAtMeal.map((d, i) => (
-        <Stack direction={"row"} key={i}>
-          <MenuDishIngredients dish={d!} key={d?.id} />
-          {i < dishesAtMeal.length - 1 && ","}
+  return (
+    <>
+      {isEdit ? (
+        <Stack direction={"row"} gap={"3px"} flexWrap={"wrap"}>
+          {dishesAtMeal.map((d) => (
+            <Tooltip title={d.name} placement="top">
+              <Chip
+                label={d.name}
+                variant="outlined"
+                onDelete={() => deleteDishFromMeal(menuId, nDay, nMeal, d.id)}
+                sx={{ maxWidth: 150 }}
+              />
+            </Tooltip>
+          ))}
+          {!isEmptyMeal && (
+            <AddDishButton menuId={menuId} nDay={nDay} nMeal={nMeal} />
+          )}
         </Stack>
-      ))}
-    </Stack>
+      ) : (
+        dishesAtMeal.map((d, i) => (
+          <>
+            <MenuDishIngredients dish={d!} key={d?.id} />
+            {i < dishesAtMeal.length - 1 && ", "}
+          </>
+        ))
+      )}
+    </>
   );
 }
 
@@ -195,20 +218,19 @@ function MenuDishIngredients({ dish }: MenuDishIngredientsProps) {
           </>
         }
       >
-        <Stack direction={"row"}>
-          <Typography
-            sx={
-              !hasIngredients
-                ? {
-                    textDecoration: "underline",
-                    textDecorationColor: "#d32f2f",
-                  }
-                : undefined
-            }
-          >
-            {dish.name}
-          </Typography>
-        </Stack>
+        <Typography
+          sx={
+            !hasIngredients
+              ? {
+                  textDecoration: "underline",
+                  textDecorationColor: "#d32f2f",
+                }
+              : undefined
+          }
+          component="span"
+        >
+          {dish.name}
+        </Typography>
       </TextWithPopover>
     </>
   );

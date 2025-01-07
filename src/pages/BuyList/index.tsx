@@ -117,6 +117,7 @@ function AddNewItem() {
             setIsEdit(false);
           }}
           autoFocus
+          blurOnEnter
           sx={{ marginLeft: 5 }}
         />
       ) : (
@@ -184,6 +185,7 @@ function CustomCheckBoxItem({ name, checked, index }: CustomCheckBoxItemProps) {
         onBlur={() => setIsEdit(false)}
         autoFocus
         clearButton
+        blurOnEnter
         fontStyle={"italic"}
       />
     </Stack>
