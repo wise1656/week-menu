@@ -66,7 +66,7 @@ const DishView = memo(({ dish }: DishProps) => {
           isEdit={isEdit}
           value={dish.name}
           onClick={toggleOpen}
-          setValue={(val) => renameDish(dish.id, val)}
+          onChangeValue={(val) => renameDish(dish.id, val)}
         />
         {isEdit && (
           <TextEditWithVariants

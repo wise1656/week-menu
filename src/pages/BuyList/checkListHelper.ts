@@ -4,8 +4,8 @@ type IngredientWithDish = Ingredient & { dish: string; dishId: string };
 
 export interface IngredientsList {
   name: string;
-  value: string;
-  dishes: {
+  value?: string;
+  dishes?: {
     id: string;
     name: string;
     countWithUnits: string;

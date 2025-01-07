@@ -3,19 +3,25 @@ import { TextEdit } from "./TextEdit";
 
 interface EditableTextProps {
   value: string;
-  setValue: (val: string) => void;
+  onChangeValue: (val: string) => void;
   isEdit: boolean;
   onClick?: () => void;
   label?: string;
   editWidth?: number;
+  onBlur?: () => void;
+  autoFocus?: boolean;
+  clearButton?: boolean;
 }
 
 export const EditableText = ({
   value,
-  setValue,
+  onChangeValue: setValue,
   isEdit,
   label,
   editWidth,
+  onBlur,
+  autoFocus,
+  clearButton,
   ...typographyProps
 }: EditableTextProps & TypographyOwnProps) => {
   return (
@@ -25,7 +31,10 @@ export const EditableText = ({
           value={value}
           onChangeValue={setValue}
           label={label}
+          onBlur={onBlur}
           sx={{ width: editWidth }}
+          autoFocus={autoFocus}
+          clearButton={clearButton}
         />
       ) : (
         <Typography

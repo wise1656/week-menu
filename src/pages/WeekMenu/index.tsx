@@ -30,7 +30,7 @@ export const WeekMenu = () => {
             variant="h6"
             isEdit={isEdit}
             value={menu.name}
-            setValue={(val) => updateMenuName(id, val)}
+            onChangeValue={(val) => updateMenuName(id, val)}
             color="white"
           />
         }
@@ -103,7 +103,7 @@ function MenuMeal({ meal, isEdit, menuId, nDay, nMeal }: MenuMealProps) {
         label={"Прием пищи"}
         value={meal.type}
         isEdit={isEdit}
-        setValue={(val) => updateMeal(menuId, nDay, nMeal, val)}
+        onChangeValue={(val) => updateMeal(menuId, nDay, nMeal, val)}
         sx={{ fontWeight: "bold" }}
         editWidth={100}
       />
