@@ -31,7 +31,10 @@ export const TextEdit = ({
   };
 
   return (
-    <Stack direction={"row"} sx={{ position: "relative" }}>
+    <Stack
+      direction={"row"}
+      sx={{ position: "relative", ...(otherProps.sx ?? {}) }}
+    >
       <TextField
         value={innerValue}
         onChange={(e) => setInnerValue(e.target.value)}

@@ -126,7 +126,7 @@ function Ingredients({ dish, isEdit }: IngredientsProps) {
           <Stack direction={"row"} key={nIngr} alignItems={"flex-end"}>
             <TextEditWithVariants
               label="ингредиент"
-              sx={{ flex: 2 }}
+              sx={{ flex: 3 }}
               value={ingredient.name}
               onChangeValue={(val) => updateIngredient({ name: val }, nIngr)}
               options={getIngredients()}
