@@ -39,6 +39,11 @@ export const DishesList = () => {
           </Stack>
         ))}
       </Stack>
+      {dishesGroups.length == 0 && (
+        <Button onClick={() => addDish("")} sx={{ alignSelf: "flex-start" }}>
+          + Добавить блюдо
+        </Button>
+      )}
     </Box>
   );
 };
