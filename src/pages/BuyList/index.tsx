@@ -148,7 +148,14 @@ function CheckBoxItem({ name, value, checked, dishes }: CheckBoxItemProps) {
               <Stack direction={"row"} gap={2} key={d.id}>
                 <Typography>{d.name}</Typography>
                 <Typography>{d.countWithUnits}</Typography>
-                <Link to={"/dishes/" + d.id}>Посмотреть</Link>
+                <MuiLink
+                  component={Link}
+                  to={"/dishes/" + d.id}
+                  color="primary"
+                  underline="hover"                  
+                >
+                  Посмотреть
+                </MuiLink>
               </Stack>
             ))}
           </Stack>

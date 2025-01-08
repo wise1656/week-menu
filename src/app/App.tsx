@@ -9,6 +9,9 @@ import { createTheme, ThemeProvider } from "@mui/material";
 const theme = createTheme({
   palette: {
     mode: "light", // Установите режим на 'light'
+    primary: {
+      main: "rgb(35, 142, 13)", // Замените на желаемый основной цвет
+    },
   },
 });
 

@@ -29,6 +29,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   align-items: flex-start;
+  background-image: url('bg256.webp');
 }
 
 h1 {
@@ -49,8 +50,4 @@ button {
 }
 button:hover {
   border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }

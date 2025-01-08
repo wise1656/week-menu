@@ -5,8 +5,7 @@ import { MenuListItem } from "./MenuListItem";
 import AddIcon from "@mui/icons-material/Add"; // Импорт иконки
 
 export const MenuList = () => {
-  const { menus } = useMenuStore();
-  const { addNewMenu } = useMenuStore();
+  const { menus, addNewMenu } = useMenuStore();
 
   return (
     <Stack>

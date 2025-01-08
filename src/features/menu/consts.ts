@@ -142,11 +142,11 @@ export const defaultMenuValue: MenuStore = {
             },
             {
               type: "Обед",
-              dishes: ["2"],
+              dishes: ["2", "3"],
             },
             {
               type: "Ужин",
-              dishes: ["3"],
+              dishes: ["4"],
             },
           ],
         },
@@ -157,15 +157,35 @@ export const defaultMenuValue: MenuStore = {
   dishes: [
     {
       id: "1",
-      name: "Oatmeal",
-      groupName: "",
+      name: "Яичница",
+      groupName: "Завтраки",
+      ingredients: [{ name: "Яйцо", count: 3, unit: "шт" }],
+    },
+    {
+      id: "2",
+      name: "Куриный бульон с лапшой",
+      groupName: "Обеды",
       ingredients: [
+        { name: "Куриный окорок", count: 1, unit: "шт" },
+        { name: "Лапша", count: 0.1, unit: "кг" },
         { name: "Яйцо", count: 1, unit: "шт" },
-        { name: "Молоко", count: 0.1, unit: "л" },
       ],
     },
-    { id: "2", name: "Soup", groupName: "", ingredients: [] },
-    { id: "3", name: "Grilled Chicken", groupName: "", ingredients: [] },
-    { id: "4", name: "New soup", groupName: "", ingredients: [] },
+    {
+      id: "3",
+      name: "Салат овощной",
+      groupName: "Салаты",
+      ingredients: [
+        { name: "Огурец", count: 1, unit: "шт" },
+        { name: "Помидор", count: 2, unit: "шт" },
+        { name: "Капуста белокачанная", count: 0.1, unit: "кг" },
+      ],
+    },
+    {
+      id: "4",
+      name: "Пельмени полуфабрикат",
+      groupName: "Ужин",
+      ingredients: [{ name: "Пельмени", count: 1, unit: "кг" }],
+    },
   ],
 };

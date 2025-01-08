@@ -64,7 +64,7 @@ const DishView = memo(({ dish }: DishProps) => {
 
   return (
     <div id={dish.id}>
-      <Stack alignItems={"center"} direction={"row"}>
+      <Stack alignItems={"center"} direction={"row"} gap={1}>
         <EditableText
           label="название"
           variant="h6"
@@ -128,7 +128,7 @@ function Ingredients({ dish, isEdit }: IngredientsProps) {
     <>
       {ingredients.map((ingredient, nIngr) =>
         isEdit ? (
-          <Stack direction={"row"} key={nIngr} alignItems={"flex-end"}>
+          <Stack direction={"row"} key={nIngr} alignItems={"flex-end"} gap={1}>
             <TextEditWithVariants
               label="ингредиент"
               sx={{ flex: 3 }}

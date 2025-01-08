@@ -9,6 +9,7 @@ import {
   css,
   Chip,
   Tooltip,
+  Link as MuiLink,
 } from "@mui/material";
 import { useMenuStore } from "../../features/menu/store";
 import { EditableText } from "../../shared/ui/Editable";
@@ -214,7 +215,14 @@ function MenuDishIngredients({ dish }: MenuDishIngredientsProps) {
             ) : (
               <Typography color="error">Ингридиенты не заполнены</Typography>
             )}
-            <Link to={"/dishes/" + dish.id}>Изменить</Link>
+            <MuiLink
+              component={Link}
+              to={"/dishes/" + dish.id}
+              color="primary"
+              underline="hover"
+            >
+              Изменить
+            </MuiLink>
           </>
         }
       >
