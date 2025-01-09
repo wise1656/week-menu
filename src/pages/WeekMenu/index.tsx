@@ -167,7 +167,7 @@ function DishSelect({
       {isEdit ? (
         <Stack direction={"row"} gap={"3px"} flexWrap={"wrap"}>
           {dishesAtMeal.map((d) => (
-            <Tooltip title={d.name} placement="top">
+            <Tooltip title={d.name} placement="top" key={d.id}>
               <Chip
                 label={d.name}
                 variant="outlined"

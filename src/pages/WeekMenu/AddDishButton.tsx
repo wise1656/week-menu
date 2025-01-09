@@ -76,12 +76,13 @@ export const AddDishButton = ({ menuId, nDay, nMeal }: AddDishButtonProps) => {
               return (
                 <>
                   {dishes.length > 0 && (
-                    <Stack>
+                    <Stack key={group.groupName}>
                       <Typography variant="h5">{group.groupName}</Typography>
                       {dishes.map((dish) => (
                         <Typography
                           variant="body1"
                           onClick={() => onSelect(dish.id)}
+                          key={dish.id}
                         >
                           • {dish.name}
                         </Typography>

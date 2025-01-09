@@ -17,6 +17,7 @@ import UnpublishedIcon from "@mui/icons-material/Unpublished";
 import { EditableText } from "../../shared/ui/Editable";
 import { useState } from "react";
 import { TextEdit } from "../../shared/ui/TextEdit";
+import { useConfirmDialog } from "../../shared/ui/useConfirmDialog";
 
 export const BuyList = () => {
   const { id } = useParams();
@@ -24,6 +25,7 @@ export const BuyList = () => {
   const menu = getMenuById(id!);
   const { isItemChecked, clearChecks, getCustomList } = useBuyList();
   const navigate = useNavigate();
+  const { dialog, showDialog } = useConfirmDialog();
 
   if (!id || !menu) return <Typography>Меню не найдено</Typography>;
 
@@ -45,8 +47,17 @@ export const BuyList = () => {
     ...buyList.filter((i) => i.checked),
   ];
 
+  const onClear = () => {
+    showDialog(
+      "Сброс",
+      "Вы уверены что хотите сбросить список покупок? Все добавленные вручную записи будут удалены, все галочки с автоматических записей будут сняты",
+      { ok: "Сбросить", okColor: "error" }
+    ).then((isOk) => isOk && clearChecks(id));
+  };
+
   return (
     <div>
+      {dialog}
       <TopMenu
         title={
           <Stack
@@ -78,7 +89,7 @@ export const BuyList = () => {
                 Список
               </Typography>
             </Breadcrumbs>
-            <IconButton onClick={() => clearChecks(id)}>
+            <IconButton onClick={onClear}>
               <UnpublishedIcon sx={{ color: "white" }} />
             </IconButton>
           </Stack>
@@ -152,7 +163,7 @@ function CheckBoxItem({ name, value, checked, dishes }: CheckBoxItemProps) {
                   component={Link}
                   to={"/dishes/" + d.id}
                   color="primary"
-                  underline="hover"                  
+                  underline="hover"
                 >
                   Посмотреть
                 </MuiLink>

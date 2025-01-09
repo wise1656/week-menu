@@ -10,6 +10,7 @@ import { TextEdit } from "../../shared/ui/TextEdit";
 import { useParams } from "react-router-dom";
 import { TextEditWithVariants } from "../../shared/ui/TextEditWithVariants";
 import TopMenu from "../../shared/ui/TopMenu";
+import { useConfirmDialog } from "../../shared/ui/useConfirmDialog";
 
 export const DishesList = () => {
   const { getDishesGroups, addDish } = useMenuStore();
@@ -58,12 +59,25 @@ const DishView = memo(({ dish }: DishProps) => {
   const [isOpen, setIsOpen] = useState(openEditOnStart);
   const [isEdit, setIsEdit] = useState(openEditOnStart);
   const toggleOpen = () => setIsOpen((v) => !v);
-  const toggleEdit = () => setIsEdit((v) => !v);
+  const toggleEdit = () => {
+    if (isEdit) setIsOpen(false);
+    setIsEdit((v) => !v);
+  };
   const { renameDish, deleteDish, changeGroup, getDishGroupsNames } =
     useMenuStore();
+  const { dialog, showDialog } = useConfirmDialog();
+
+  const onDelete = () => {
+    showDialog(
+      "Удаление",
+      "Вы уверены что хотите удалить блюдо? Это необратимая операция",
+      { ok: "Удалить", okColor: "error" }
+    ).then((isOk) => isOk && deleteDish(dish.id));
+  };
 
   return (
     <div id={dish.id}>
+      {dialog}
       <Stack alignItems={"center"} direction={"row"} gap={1}>
         <EditableText
           label="название"
@@ -72,6 +86,7 @@ const DishView = memo(({ dish }: DishProps) => {
           value={dish.name}
           onClick={toggleOpen}
           onChangeValue={(val) => renameDish(dish.id, val)}
+          editWidth={200}
         />
         {isEdit && (
           <TextEditWithVariants
@@ -82,23 +97,21 @@ const DishView = memo(({ dish }: DishProps) => {
             sx={{ flex: 1 }}
           />
         )}
-        {isOpen ? (
-          <ExpandLessIcon onClick={toggleOpen} />
-        ) : (
-          <ExpandMoreIcon onClick={toggleOpen} />
-        )}
+        {!isEdit &&
+          (isOpen ? (
+            <ExpandLessIcon onClick={toggleOpen} />
+          ) : (
+            <ExpandMoreIcon onClick={toggleOpen} />
+          ))}
       </Stack>
       <Collapse in={isOpen}>
+        {isEdit && <Box sx={{ height: 15 }} />}
         <Ingredients dish={dish} isEdit={isEdit} />
         <Stack direction={"row"} gap={1}>
           <Button size="small" onClick={toggleEdit}>
             {isEdit ? "Ok" : "Изменить"}
           </Button>
-          <Button
-            size="small"
-            onClick={() => deleteDish(dish.id)}
-            color={"error"}
-          >
+          <Button size="small" onClick={onDelete} color={"error"}>
             Удалить
           </Button>
         </Stack>
