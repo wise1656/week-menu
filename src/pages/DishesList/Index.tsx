@@ -7,7 +7,7 @@ import { useMenuStore } from "../../features/menu/store";
 import { Dish, Ingredient } from "../../features/menu/types";
 import { EditableText } from "../../shared/ui/Editable";
 import { TextEdit } from "../../shared/ui/TextEdit";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { TextEditWithVariants } from "../../shared/ui/TextEditWithVariants";
 import TopMenu from "../../shared/ui/TopMenu";
 import { useConfirmDialog } from "../../shared/ui/useConfirmDialog";
@@ -55,9 +55,12 @@ interface DishProps {
 
 const DishView = memo(({ dish }: DishProps) => {
   const { id } = useParams();
-  const openEditOnStart = dish.id == id || dish.name == "";
-  const [isOpen, setIsOpen] = useState(openEditOnStart);
-  const [isEdit, setIsEdit] = useState(openEditOnStart);
+  const { pathname } = useLocation();
+  const editOnStart =
+    (dish.id == id && pathname.includes("/edit")) || dish.name == "";
+  const openOnStart = editOnStart || dish.id == id;
+  const [isOpen, setIsOpen] = useState(openOnStart);
+  const [isEdit, setIsEdit] = useState(editOnStart);
   const toggleOpen = () => setIsOpen((v) => !v);
   const toggleEdit = () => {
     if (isEdit) setIsOpen(false);
@@ -75,8 +78,12 @@ const DishView = memo(({ dish }: DishProps) => {
     ).then((isOk) => isOk && deleteDish(dish.id));
   };
 
+  const editGroup = (val: string) => {
+    changeGroup(dish.id, val);
+    setTimeout(() => scrollToId(dish.id));
+  };
   return (
-    <div id={dish.id}>
+    <Box id={dish.id} sx={{ scrollMargin: "64px" }}>
       {dialog}
       <Stack alignItems={"center"} direction={"row"} gap={1}>
         <EditableText
@@ -92,7 +99,7 @@ const DishView = memo(({ dish }: DishProps) => {
           <TextEditWithVariants
             label="категория"
             value={dish.groupName}
-            onChangeValue={(val) => changeGroup(dish.id, val)}
+            onChangeValue={editGroup}
             options={getDishGroupsNames()}
             sx={{ flex: 1 }}
           />
@@ -117,7 +124,7 @@ const DishView = memo(({ dish }: DishProps) => {
         </Stack>
         <div style={{ marginBottom: 5 }} />
       </Collapse>
-    </div>
+    </Box>
   );
 });
 
@@ -181,13 +188,17 @@ function Ingredients({ dish, isEdit }: IngredientsProps) {
 const useScrollToSelected = () => {
   const { id } = useParams();
   useEffect(() => {
-    if (id) {
-      const targetElement = document.getElementById(id); // Находим элемент
-      // Прокручиваем к элементу с плавной анимацией
-      targetElement?.scrollIntoView({
-        behavior: "smooth",
-        block: "start", // Выравнивание по верхней части области просмотра
-      });
-    }
-  }, []);
+    scrollToId(id);
+  }, [id]);
+};
+
+const scrollToId = (id: string | undefined) => {
+  if (id) {
+    const targetElement = document.getElementById(id); // Находим элемент
+    // Прокручиваем к элементу с плавной анимацией
+    targetElement?.scrollIntoView({
+      behavior: "instant",
+      block: "start", // Выравнивание по верхней части области просмотра
+    });
+  }
 };

@@ -30,6 +30,7 @@ export const App = () => {
             />
             <Route path="/dishes" element={<DishesList />} id="dishes" />
             <Route path="/dishes/:id" element={<DishesList />} id="dishes" />
+            <Route path="/dishes/:id/edit" element={<DishesList />} id="dishes" />
           </Routes>
         </Layout>
       </Router>

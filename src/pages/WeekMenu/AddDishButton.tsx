@@ -11,6 +11,7 @@ import {
 import { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { useMenuStore } from "../../features/menu/store";
+import { TextEdit } from "../../shared/ui/TextEdit";
 
 interface AddDishButtonProps {
   menuId: string;
@@ -19,14 +20,16 @@ interface AddDishButtonProps {
 }
 
 export const AddDishButton = ({ menuId, nDay, nMeal }: AddDishButtonProps) => {
-  const { getDishesGroups, addDishToMeal } = useMenuStore();
+  const { getDishesGroups, addDishToMeal, addDish } = useMenuStore();
   const [open, setOpen] = useState(false);
   const dishes = getDishesGroups();
   const [filter, setFilter] = useState("");
+  const [isAddDishOpened, setAddDishOpened] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
     setTimeout(() => setFilter(""), 500);
+    setAddDishOpened(false);
   };
 
   const onSelect = (dishId: string) => {
@@ -34,15 +37,14 @@ export const AddDishButton = ({ menuId, nDay, nMeal }: AddDishButtonProps) => {
     handleClose();
   };
 
+  const addNewDish = (val: string) => {
+    const newDish = addDish("", val);
+    onSelect(newDish);
+  };
+
   return (
     <>
-      <IconButton
-        size="small"
-        sx={{ border: "solid 1px" }}
-        onClick={() => setOpen(true)}
-      >
-        <Add fontSize="small" />
-      </IconButton>
+      <AddButton onClick={() => setOpen(true)} />
       <Dialog
         open={open}
         onClose={handleClose}
@@ -55,16 +57,34 @@ export const AddDishButton = ({ menuId, nDay, nMeal }: AddDishButtonProps) => {
       >
         <DialogTitle>
           <Stack direction={"row"} alignItems={"center"}>
-            <Typography variant="h5" fontWeight="bold">
+            <Typography variant="h5" fontWeight="bold" sx={{ marginRight: 1 }}>
               Блюда
             </Typography>
-            <SearchIcon fontSize="small" sx={{ marginLeft: 10 }} color="info" />
-            <TextField
-              fullWidth
-              variant="standard"
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-            />
+            {!isAddDishOpened && (
+              <AddButton onClick={() => setAddDishOpened(true)} />
+            )}
+            {isAddDishOpened ? (
+              <NewDish onAddDish={addNewDish} />
+            ) : (
+              <Stack
+                direction={"row"}
+                justifyItems={"flex-end"}
+                alignItems={"center"}
+                flex={1}
+              >
+                <SearchIcon
+                  fontSize="small"
+                  sx={{ marginLeft: 3 }}
+                  color="info"
+                />
+                <TextField
+                  fullWidth
+                  variant="standard"
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                />
+              </Stack>
+            )}
           </Stack>
         </DialogTitle>
         <DialogContent>
@@ -98,3 +118,26 @@ export const AddDishButton = ({ menuId, nDay, nMeal }: AddDishButtonProps) => {
     </>
   );
 };
+
+function AddButton({ onClick }: { onClick: () => void }) {
+  return (
+    <IconButton size="small" sx={{ border: "solid 1px" }} onClick={onClick}>
+      <Add fontSize="small" />
+    </IconButton>
+  );
+}
+
+function NewDish({ onAddDish }: { onAddDish: (dish: string) => void }) {
+  const [dish, setDish] = useState("");
+  return (
+    <>
+      <TextEdit
+        onChangeValue={setDish}
+        autoFocus
+        label="Новое блюдо"
+        onEnter={(val) => setTimeout(() => onAddDish(val))}
+      />
+      <AddButton onClick={() => onAddDish(dish)} />
+    </>
+  );
+}

@@ -64,7 +64,7 @@ export const getDishUpdater = (
         });
       })
     );
-    return newId;
+    return newId as string;
   },
 
   deleteDish: (id: string) => {

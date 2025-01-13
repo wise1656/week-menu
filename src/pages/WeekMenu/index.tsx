@@ -157,10 +157,6 @@ function DishSelect({
   const dishesAtMeal = dishesList
     .filter((d) => dishes.includes(d.id))
     .filter((d) => d);
-  // const addNewDish = (dishName: string) => {
-  //   const id = addDish("", dishName);
-  //   if (id) addDishToMeal(menuId, nDay, nMeal, id);
-  // };
 
   return (
     <>
@@ -217,7 +213,7 @@ function MenuDishIngredients({ dish }: MenuDishIngredientsProps) {
             )}
             <MuiLink
               component={Link}
-              to={"/dishes/" + dish.id}
+              to={`/dishes/${dish.id}/edit`}
               color="primary"
               underline="hover"
             >

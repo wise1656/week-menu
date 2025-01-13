@@ -12,7 +12,7 @@ export const EditButton = ({
     <IconButton
       color={selected ? "primary" : "default"}
       onClick={onClick}
-      sx={selected ? { border: 1 } : {}}
+      sx={selected ? { border: "solid 2px white" } : {}}
     >
       <EditIcon sx={{ color: "white" }} />
     </IconButton>

@@ -6,6 +6,7 @@ export type TextEditProps = TextFieldProps & {
   onChangeValue: (val: string) => void;
   clearButton?: boolean;
   blurOnEnter?: boolean;
+  onEnter?: (val: string) => void;
 };
 
 export const TextEdit = ({
@@ -14,6 +15,7 @@ export const TextEdit = ({
   onBlur,
   clearButton,
   blurOnEnter,
+  onEnter,
   ...otherProps
 }: TextEditProps) => {
   const [innerValue, setInnerValue] = useState(value as string);
@@ -43,6 +45,7 @@ export const TextEdit = ({
         size="small"
         onKeyDown={(e) => {
           if (blurOnEnter && e.key === "Enter") onBlurHandle();
+          if (onEnter && e.key === "Enter") onEnter(innerValue);
         }}
         {...otherProps}
       />
