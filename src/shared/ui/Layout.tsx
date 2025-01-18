@@ -31,6 +31,7 @@ export const Layout = ({ children }: LayoutProps) => {
       ? "buyList"
       : "";
   const { lastMenu } = useMenuStore();
+  const isInSomeMenu = menu == "menu" && menuUrl;
 
   return (
     <Container maxWidth="sm">
@@ -45,7 +46,9 @@ export const Layout = ({ children }: LayoutProps) => {
             label="Меню"
             icon={<MenuBookIcon />}
             value="menu"
-            onClick={() => navigate("/")}
+            onClick={() =>
+              navigate(isInSomeMenu ? "/" : `/weekly-menu/${lastMenu}`)
+            }
           />
           <BottomNavigationAction
             label="Блюда"

@@ -64,7 +64,7 @@ export const AddDishButton = ({ menuId, nDay, nMeal }: AddDishButtonProps) => {
               <AddButton onClick={() => setAddDishOpened(true)} />
             )}
             {isAddDishOpened ? (
-              <NewDish onAddDish={addNewDish} />
+              <NewDish onAddDish={addNewDish} initialVal={filter} />
             ) : (
               <Stack
                 direction={"row"}
@@ -127,12 +127,19 @@ function AddButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-function NewDish({ onAddDish }: { onAddDish: (dish: string) => void }) {
-  const [dish, setDish] = useState("");
+function NewDish({
+  onAddDish,
+  initialVal,
+}: {
+  onAddDish: (dish: string) => void;
+  initialVal: string;
+}) {
+  const [dish, setDish] = useState(initialVal);
   return (
     <>
       <TextEdit
         onChangeValue={setDish}
+        value={initialVal}
         autoFocus
         label="Новое блюдо"
         onEnter={(val) => setTimeout(() => onAddDish(val))}
