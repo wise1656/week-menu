@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Typography,
@@ -163,14 +163,16 @@ function DishSelect({
       {isEdit ? (
         <Stack direction={"row"} gap={"3px"} flexWrap={"wrap"}>
           {dishesAtMeal.map((d) => (
-            <Tooltip title={d.name} placement="top" key={d.id}>
-              <Chip
-                label={d.name}
-                variant="outlined"
-                onDelete={() => deleteDishFromMeal(menuId, nDay, nMeal, d.id)}
-                sx={{ maxWidth: 150 }}
-              />
-            </Tooltip>
+            <IngredientsPopover dish={d!} key={d.id}>
+              <Tooltip title={d.name} placement="top">
+                <Chip
+                  label={d.name}
+                  variant="outlined"
+                  onDelete={() => deleteDishFromMeal(menuId, nDay, nMeal, d.id)}
+                  sx={{ maxWidth: 150 }}
+                />
+              </Tooltip>
+            </IngredientsPopover>
           ))}
           {!isEmptyMeal && (
             <AddDishButton menuId={menuId} nDay={nDay} nMeal={nMeal} />
@@ -193,6 +195,13 @@ interface MenuDishIngredientsProps {
 }
 
 function MenuDishIngredients({ dish }: MenuDishIngredientsProps) {
+  return <IngredientsPopover dish={dish}>{dish.name}</IngredientsPopover>;
+}
+
+function IngredientsPopover({
+  dish,
+  children,
+}: PropsWithChildren<MenuDishIngredientsProps>) {
   const ingredientsView = dish.ingredients.map((ingredient) => (
     <Typography variant="body1" color="text.secondary" key={ingredient.name}>
       {ingredient.name}: {ingredient.count} {ingredient.unit}
@@ -201,41 +210,39 @@ function MenuDishIngredients({ dish }: MenuDishIngredientsProps) {
   const hasIngredients = dish.ingredients.length > 0;
 
   return (
-    <>
-      <TextWithPopover
-        id={dish.id}
-        popup={
-          <>
-            {hasIngredients ? (
-              ingredientsView
-            ) : (
-              <Typography color="error">Ингридиенты не заполнены</Typography>
-            )}
-            <MuiLink
-              component={Link}
-              to={`/dishes/${dish.id}/edit`}
-              color="primary"
-              underline="hover"
-            >
-              Изменить
-            </MuiLink>
-          </>
+    <TextWithPopover
+      id={dish.id}
+      popup={
+        <>
+          {hasIngredients ? (
+            ingredientsView
+          ) : (
+            <Typography color="error">Ингридиенты не заполнены</Typography>
+          )}
+          <MuiLink
+            component={Link}
+            to={`/dishes/${dish.id}/edit`}
+            color="primary"
+            underline="hover"
+          >
+            Изменить
+          </MuiLink>
+        </>
+      }
+    >
+      <Typography
+        sx={
+          !hasIngredients
+            ? {
+                textDecoration: "underline",
+                textDecorationColor: "#d32f2f",
+              }
+            : undefined
         }
+        component="span"
       >
-        <Typography
-          sx={
-            !hasIngredients
-              ? {
-                  textDecoration: "underline",
-                  textDecorationColor: "#d32f2f",
-                }
-              : undefined
-          }
-          component="span"
-        >
-          {dish.name}
-        </Typography>
-      </TextWithPopover>
-    </>
+        {children}
+      </Typography>
+    </TextWithPopover>
   );
 }
